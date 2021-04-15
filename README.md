@@ -9,7 +9,7 @@
 ### Usage:
 #### 1. Build docker container 
 ```
-$ docker build --tag bloomon-challenge
+$ docker build --tag bloomon-challenge . 
 ```
 
 #### 2. Test sample input
