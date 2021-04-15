@@ -34,7 +34,7 @@ class TestExampleInput(unittest.TestCase):
 
     def test_make_bouquets(self): 
         with patch('sys.stdout', new=StringIO()) as real_output:
-            make_bouquets([test_design_string], test_flower_stock)
+            make_bouquets(test_design_permutation, test_flower_stock)
             self.assertEqual(test_output_bouquets, real_output.getvalue().strip())
 
     def test_exampleInOut(self):

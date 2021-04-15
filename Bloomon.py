@@ -18,11 +18,14 @@ for i in range(26*2):
     elif i >= 26:
         data_columns[i] = data_columns[i]+"L"
 
+data_columns.append("NameSize")
 
 def parse_design_string(design_string):
     """
-    Parse design string
-    return design name, flower size, flower type maxes, bouquet sum
+    Parse design string.
+
+    Input:  Design string (string)
+    Output: design name (str), flower size (str), flower type maxes (ndarray), bouquet sum (int)
     """
 
     parsed_str = ""
@@ -40,53 +43,53 @@ def parse_design_string(design_string):
 
 def read_design(design_string):
     """
-    Read the bouquet design string and output all
-    possible bouquet permutations as Dataframe
+    Read design sting, parse and generate all valid bouquet permutations.
+
+    Input: Bouquet design (string)
+    Output: All valid bouquet permutations (Dataframe)
     """
 
     name, sizes, flower_maxes, flower_sum = parse_design_string(design_string)
 
-    permuts = pd.DataFrame(columns=data_columns, dtype=int)
+    permuts = pd.DataFrame(columns=data_columns)
 
-    for r in itertools.product(*[range(1, int(n[:-1])+1) for n in flower_maxes]):
-        if np.sum(r) == flower_sum:
-            permuts = permuts.append(pd.Series(list(r),
-                                               index=[flower[-1]+sizes
-                                                      for flower in flower_maxes],
-                                               dtype=int),
-                                     ignore_index=True).fillna(0)
-    return permuts
+    for flower_counts in itertools.product(*[range(1, int(n[:-1])+1) for n in flower_maxes]):
+        if np.sum(flower_counts) == flower_sum:
+
+            permuts = permuts.append(pd.Series(list(flower_counts)+[name+sizes],
+                                               index=[flower[-1] + sizes
+                                                      for flower in flower_maxes] + ["NameSize"],
+                                               dtype=object), ignore_index=True).fillna(0)
+    return permuts.astype(int, errors='ignore')
 
 
-def make_bouquets(all_designs, flower_stock):
+def make_bouquets(possible_designs, flower_stock):
     """
-    Take list of all design codes, and DataFrame of current flower stock.
-    print valid bouquets and update flower stock
+    Compare current flower stock to all valid bouquets, print the first constructable
+    bouquet and update flower stock.
+
+    Input: all valid bouquet designs (DataFrame)
+    print constructed bouquet
+    Output: updated flower stock (DataFrame)
     """
-    # iterating through designs
-    for bouquet_design in all_designs:
 
-        design_id = str(bouquet_design[0])
-        flower_size = bouquet_design[1]
+    # iterate through all permutations of given design
+    for permutation in possible_designs.index:
+        bouquet_df = possible_designs.iloc[permutation]
 
-        design_perm_df = read_design(bouquet_design)
+        # can't have negative flower stock
+        if np.min((flower_stock[data_columns[:-1]] - bouquet_df[data_columns[:-1]]).values) >= 0:
 
-        # iterate through all permutations of given design
-        for permutation in design_perm_df.index:
-            bouquet_df = design_perm_df.iloc[permutation]
+            flower_stock[data_columns[:-1]] -= bouquet_df[data_columns[:-1]]
 
-            # can't have negative flower stock
-            if np.min((flower_stock - bouquet_df).values) >= 0:
+            str_bouquet = ""
 
-                flower_stock -= bouquet_df
-
-                str_bouquet = ""
-
-                for key in bouquet_df.keys():
-                    if bouquet_df[key] == 0:
-                        continue
-                    str_bouquet += str(int(bouquet_df[key]))+str(key[0])
-                print(design_id+flower_size+str_bouquet)
+            for key in bouquet_df[data_columns[:-1]].keys():
+                if bouquet_df[key] == 0:
+                    continue
+                str_bouquet += str(int(bouquet_df[key]))+str(key[0])
+            # print(bouquet_df)
+            print(bouquet_df["NameSize"]+str_bouquet)
 #                new_bouquet = design_id+flower_size+str_bouquet
 #                return design_id+flower_size+str_bouquet
 #    return new_bouquet
@@ -102,7 +105,7 @@ def run_batch():
     input_flowers = list(iter(input, ''))
 
     # start with empty flower stock
-    flower_stock = pd.DataFrame(np.zeros([1, 52]),
+    flower_stock = pd.DataFrame(np.zeros([1, 53]),
                                 columns=data_columns, dtype=int)
 
     output_bouquets = []
@@ -127,10 +130,18 @@ def run_streaming():
     # Get designs
     input_designs = list(iter(input, ''))
 
-    # start with empty flower stock
-    flower_stock = pd.DataFrame(np.zeros([1, 52]),
+    # Calculate all possible bouquet permutations once.
+    design_permutations = pd.concat([read_design(bouquet_design)
+                                     for bouquet_design in input_designs],
+                                    ignore_index=True)
+
+
+
+    # Start with empty flower stock.
+    flower_stock = pd.DataFrame(np.zeros([1, 53]),
                                 columns=data_columns, dtype=int)
 
+    # Users add new flower, accumulated stock is checked against all bouquets.
     go = True
     while go:
 
@@ -145,7 +156,7 @@ def run_streaming():
             # invalid flower
             continue
 
-        make_bouquets(input_designs, flower_stock)
+        make_bouquets(design_permutations, flower_stock)
     return
 
 
