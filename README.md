@@ -3,7 +3,8 @@
 
  This command line application first reads user input bouquet design codes, then generates valid bouquets from a user input stream of flowers. 
 
-
+### Requirements:
+- Docker
 
 ### Usage:
 #### 1. Build docker container 
