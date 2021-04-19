@@ -1,5 +1,7 @@
 AS2a2b3
 BL2a2
+CL9a9b9c9d9e9f9g9h9i9
+DS100a100b100c100d100e100f100g100h100i100j100k100l100m100n100o100p100q100r100s100t100u100v100w100x100y100z26
 
 aL
 bS
@@ -9,4 +11,39 @@ aS
 aL
 aS
 bS
+aL
+bL
+cL
+dL
+eL
+fL
+gL
+hL
+iL
+aS
+bS
+cS
+dS
+eS
+fS
+gS
+hS
+iS
+jS
+kS
+lS
+mS
+nS
+oS
+pS
+qS
+rS
+sS
+tS
+uS
+vS
+wS
+xS
+yS
+zS
 
