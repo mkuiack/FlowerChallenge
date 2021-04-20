@@ -1,10 +1,10 @@
 FROM python:3.8-slim-buster
 
-WORKDIR /BloomonChallenge
+WORKDIR /FlowerChallenge
 COPY requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt
 
 COPY . .
 
-CMD [ "python3", "BloomonOperation.py"]
+CMD [ "python3", "FlowersOperation.py"]
