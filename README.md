@@ -1,4 +1,4 @@
-# Technical challenge Bloomon.
+# Technical challenge.
 
 
  This command line application first reads user input bouquet design codes, then generates valid bouquets from a user input stream of flowers. 
@@ -9,12 +9,12 @@
 ### Usage:
 #### 1. Build docker container 
 ```
-$ docker build --tag bloomon-challenge . 
+$ docker build --tag flower-challenge . 
 ```
 
 #### 2. Test sample input
 ```
-$ time cat test/sample_input.txt | docker run -i bloomon-challenge
+$ time cat test/sample_input.txt | docker run -i flower-challenge
 AS1a2b
 BL2a
 AS2a1b
@@ -28,7 +28,7 @@ sys	0m0.024s
 
 #### 3. Run
 ```
-$ docker run -i bloomon-challenge
+$ docker run -i flower-challenge
 $ design1
 $ design2
 ...
