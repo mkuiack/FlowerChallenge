@@ -5,7 +5,7 @@ import pandas as pd
 from io import StringIO
 from unittest.mock import patch
 
-from Bloomon import parse_design_string, read_design, make_bouquets
+from Flowers import parse_design_string, read_design, make_bouquets
 
 
 test_design_string = "BL2a2b3"
@@ -18,7 +18,7 @@ test_flower_stock = test_design_permutation.sum()
 test_output_bouquets = "BL1a2b\nBL2a1b"
 
 # Expected output from challenge example input
-test_bloomon_output = b"AS1a2b\nBL2a\nAS2a1b\n"
+test_flowers_output = b"AS1a2b\nBL2a\nAS2a1b\n"
 
 class TestExampleInput(unittest.TestCase):
     maxDiff = None
@@ -38,9 +38,9 @@ class TestExampleInput(unittest.TestCase):
             self.assertEqual(test_output_bouquets, real_output.getvalue().strip())
 
     def test_exampleInOut(self):
-        real_output = subprocess.Popen("cat test/sample_input.txt |  python3 Bloomon.py", 
+        real_output = subprocess.Popen("cat test/sample_input.txt |  python3 Flowers.py", 
                                 shell=True,  stdout=subprocess.PIPE)    
-        self.assertEqual(test_bloomon_output, real_output.stdout.read())
+        self.assertEqual(test_flower_output, real_output.stdout.read())
 
 
 if __name__ == '__main__':
