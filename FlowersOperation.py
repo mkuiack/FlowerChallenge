@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from typing import Tuple, Union
 
-class bloomon_operation():
+class flowers_operation():
 
     def __init__(self):
         # Define all flower types
@@ -127,8 +127,8 @@ class bloomon_operation():
 
 if __name__ == "__main__":
 
-    # add new bloomon operation
-    amsterdam_garden = bloomon_operation()
+    # add new flowers operation
+    amsterdam_garden = flowers_operation()
 
     # submit designs to the operation
     amsterdam_garden.submit_designs()
